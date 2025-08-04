@@ -29,15 +29,16 @@ public final class ServidorWeb {
 }
 
 final class SolicitudHttp implements Runnable {
-    final static String CRLF = "/r/n";
+    final static String CRLF = "\r\n";
     Socket socket; 
 
     public SolicitudHttp(Socket socket) throws Exception{
+        this.socket = socket;
 
 
     }
 
-    public void Run(){
+    public void run(){
         try{
 
             proceSolicitudI();
@@ -49,24 +50,24 @@ final class SolicitudHttp implements Runnable {
 
     }
 
-    public void proceSolicitudI(){
+   public void proceSolicitudI() throws Exception {
+    DataOutputStream os = new DataOutputStream(socket.getOutputStream());
+    BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-        DataOutputStream os = new DataOutputStream(socket.getOutputStream());
-        BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        String linea = br.readLine();
-        System.out.println("");
-        System.out.println(linea);
-        String lineaHeader = null;
-        while (lineaHeader = br.readLine().length()!= 0) {
-            System.out.println(lineaHeader);
-            
-        }
-        os.close();
-        br.close();
-        socket.close();
+    String linea = br.readLine();
+    System.out.println();
+    System.out.println(linea);
 
-
+    String lineaHeader;
+    while ((lineaHeader = br.readLine()) != null && lineaHeader.length() != 0) {
+        System.out.println(lineaHeader);
     }
+
+    os.close();
+    br.close();
+    socket.close();
+}
+
 
     
 }
